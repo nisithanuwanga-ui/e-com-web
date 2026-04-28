@@ -10,10 +10,13 @@
           Store<span class="text-gray-400">.</span>
         </router-link>
 
-        <nav class="flex gap-8 text-sm font-medium text-gray-500">
+        <nav class="flex items-center gap-8 text-sm font-medium text-gray-500">
           <router-link to="/" class="hover:text-black transition-colors">Mac</router-link>
           <router-link to="/" class="hover:text-black transition-colors">iPad</router-link>
           <router-link to="/" class="hover:text-black transition-colors">iPhone</router-link>
+
+          <div class="h-4 w-px bg-gray-300"></div>
+          <router-link to="/login" class="text-blue-600 hover:text-blue-800 transition-colors">Sign In</router-link>
         </nav>
       </div>
     </header>
