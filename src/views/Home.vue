@@ -39,20 +39,16 @@ const filteredProducts = computed(() => {
             Loading the store...
         </div>
 
-        <div v-else class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            <div v-for="product in filteredProducts" :key="product.id"
-                class="bg-white rounded-3xl p-6 shadow-sm hover:shadow-xl transition-all duration-300 cursor-pointer flex flex-col items-center text-center group">
-                <h3 class="text-sm font-semibold text-orange-500 mb-1 uppercase tracking-wider">{{ product.category }}
-                </h3>
-                <h2 class="text-2xl font-semibold text-gray-900 mb-2">{{ product.title }}</h2>
-                <p class="text-lg font-light text-gray-500 mb-6">${{ product.price }}</p>
+        <router-link v-for="product in filteredProducts" :key="product.id" :to="`/product/${product.id}`"
+            class="bg-white rounded-3xl p-6 shadow-sm hover:shadow-xl transition-all duration-300 cursor-pointer flex flex-col items-center text-center group">
+            <h3 class="text-sm font-semibold text-orange-500 mb-1 uppercase tracking-wider">{{ product.category }}</h3>
+            <h2 class="text-2xl font-semibold text-gray-900 mb-2">{{ product.title }}</h2>
+            <p class="text-lg font-light text-gray-500 mb-6">${{ product.price }}</p>
 
-                <div
-                    class="h-48 w-full flex items-center justify-center mb-4 transition-transform duration-500 group-hover:scale-105">
-                    <img :src="product.thumbnail" :alt="product.title"
-                        class="max-h-full object-contain mix-blend-multiply">
-                </div>
+            <div
+                class="h-48 w-full flex items-center justify-center mb-4 transition-transform duration-500 group-hover:scale-105">
+                <img :src="product.thumbnail" :alt="product.title" class="max-h-full object-contain mix-blend-multiply">
             </div>
-        </div>
+        </router-link>
     </div>
 </template>
