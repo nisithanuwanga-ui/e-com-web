@@ -2,14 +2,15 @@
 import { ref, onMounted } from 'vue';
 import { useRoute } from 'vue-router';
 import type { Product } from '../types';
+import { addToCart } from '../store/cart'; // 1. Import the store action
 
 const route = useRoute();
 const product = ref<Product | null>(null);
 const isLoading = ref(true);
+const isAdded = ref(false); // 2. Keep track of the button's animation state
 
 onMounted(async () => {
     try {
-        // We grab the specific ID from the web address
         const productId = route.params.id;
         const response = await fetch(`https://dummyjson.com/products/${productId}`);
         const data = await response.json();
@@ -20,6 +21,19 @@ onMounted(async () => {
         isLoading.value = false;
     }
 });
+
+// 3. The function that runs when you click the button
+const handleAddToCart = () => {
+    if (product.value) {
+        addToCart(product.value);
+
+        // Change button text briefly to show success
+        isAdded.value = true;
+        setTimeout(() => {
+            isAdded.value = false;
+        }, 2000);
+    }
+};
 </script>
 
 <template>
@@ -49,9 +63,10 @@ onMounted(async () => {
                     {{ product.description }}
                 </p>
 
-                <button
-                    class="w-full md:w-auto px-8 py-4 bg-blue-600 hover:bg-blue-700 text-white rounded-full font-semibold text-lg transition-colors shadow-md hover:shadow-lg">
-                    Add to Bag
+                <button @click="handleAddToCart"
+                    class="w-full md:w-auto px-8 py-4 bg-blue-600 hover:bg-blue-700 text-white rounded-full font-semibold text-lg transition-all duration-300 shadow-md hover:shadow-lg active:scale-95"
+                    :class="{ 'bg-green-600 hover:bg-green-700': isAdded }">
+                    {{ isAdded ? 'Added to Bag ✓' : 'Add to Bag' }}
                 </button>
             </div>
         </div>
