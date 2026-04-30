@@ -3,18 +3,19 @@ import { cartCount } from './store/cart';
 </script>
 
 <template>
-  <div class="min-h-screen bg-[#fbfbfd] font-sans text-[#1d1d1f]">
+  <div class="min-h-screen bg-[#fbfbfd] font-sans text-[#1d1d1f] flex flex-col">
 
     <header class="bg-white/70 backdrop-blur-md sticky top-0 z-50 border-b border-gray-200/50">
       <div class="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
         <router-link to="/" class="text-2xl font-semibold tracking-tight">
-          Store<span class="text-gray-400">.</span>
+          E-Nexus<span class="text-gray-400">.lk</span>
         </router-link>
 
-        <nav class="flex items-center gap-8 text-sm font-medium text-gray-500">
-          <router-link to="/" class="hover:text-black transition-colors">Mac</router-link>
-          <router-link to="/" class="hover:text-black transition-colors">iPad</router-link>
-          <router-link to="/" class="hover:text-black transition-colors">iPhone</router-link>
+        <nav class="hidden md:flex items-center gap-8 text-sm font-medium text-gray-500">
+          <router-link to="/" class="hover:text-black transition-colors">Laptops</router-link>
+          <router-link to="/" class="hover:text-black transition-colors">Mobiles</router-link>
+          <router-link to="/" class="hover:text-black transition-colors">Tablets</router-link>
+          <router-link to="/" class="hover:text-black transition-colors">Accessories</router-link>
 
           <div class="h-4 w-px bg-gray-300"></div>
           <router-link to="/login" class="text-blue-600 hover:text-blue-800 transition-colors">Sign In</router-link>
@@ -32,9 +33,26 @@ import { cartCount } from './store/cart';
       </div>
     </header>
 
-    <main class="max-w-7xl mx-auto px-6 py-12">
+    <main class="flex-grow max-w-7xl mx-auto px-6 w-full">
       <router-view />
     </main>
+
+    <footer class="bg-[#f5f5f7] border-t border-gray-200 mt-20 text-xs text-gray-500 font-light py-10">
+      <div class="max-w-7xl mx-auto px-6">
+        <p class="mb-4">Prices are inclusive of VAT. Free delivery on all orders over $50.</p>
+        <div class="border-t border-gray-300 my-4"></div>
+        <div class="flex flex-col md:flex-row justify-between items-center gap-4">
+          <p>Copyright © 2026 Store Inc. All rights reserved.</p>
+          <div class="flex gap-4">
+            <a href="#" class="hover:text-gray-800 transition-colors">Privacy Policy</a>
+            <div class="w-px bg-gray-300"></div>
+            <a href="#" class="hover:text-gray-800 transition-colors">Terms of Use</a>
+            <div class="w-px bg-gray-300"></div>
+            <a href="#" class="hover:text-gray-800 transition-colors">Sales Policy</a>
+          </div>
+        </div>
+      </div>
+    </footer>
 
   </div>
 </template>

@@ -41,12 +41,26 @@ const filteredProducts = computed(() => {
 
 <template>
     <div>
-        <div class="mb-16 text-center max-w-3xl mx-auto">
-            <h1 class="text-5xl font-semibold tracking-tight mb-8 text-gray-900">The latest. <span
-                    class="text-gray-400 font-normal">Take a look at what's new right now.</span></h1>
+        <div class="pt-20 pb-20 text-center max-w-4xl mx-auto px-4">
+            <h1 class="text-6xl md:text-7xl font-semibold tracking-tight text-gray-900 mb-6">
+                Pro power. <br class="hidden md:block" />
+                <span class="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-purple-500">Pure
+                    brilliance.</span>
+            </h1>
+            <p class="text-xl md:text-2xl text-gray-500 font-light mb-12">The most advanced tech lineup ever. Ready for
+                whatever's next.</p>
 
-            <input v-model="searchQuery" type="text" placeholder="Search Mac, iPhone, iPad, and Accessories..."
-                class="w-full px-6 py-4 bg-white/50 backdrop-blur-md border border-gray-200 rounded-2xl shadow-sm text-lg focus:outline-none focus:ring-2 focus:ring-gray-900 transition-all">
+            <div class="max-w-2xl mx-auto relative group">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2"
+                    stroke="currentColor"
+                    class="w-6 h-6 absolute left-6 top-1/2 transform -translate-y-1/2 text-gray-400 group-focus-within:text-blue-500 transition-colors">
+                    <path stroke-linecap="round" stroke-linejoin="round"
+                        d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z" />
+                </svg>
+                <input v-model="searchQuery" type="text"
+                    placeholder="Search Laptops, iPhones, iPads, and Accessories..."
+                    class="w-full pl-16 pr-6 py-5 bg-white/80 backdrop-blur-md border border-gray-200 rounded-full shadow-sm hover:shadow-md text-lg focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all placeholder-gray-400">
+            </div>
         </div>
 
         <div v-if="isLoading" class="text-center py-20 text-gray-400 text-xl font-light">
