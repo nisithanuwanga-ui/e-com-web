@@ -5,38 +5,66 @@ import type { Product } from '../types';
 const products = ref<Product[]>([]);
 const isLoading = ref(true);
 const searchQuery = ref('');
+const submittedQuery = ref('');
+const isSuggestionOpen = ref(false);
 
 onMounted(async () => {
     try {
-        // 1. Define all the tech categories I want in my store
         const techCategories = ['laptops', 'smartphones', 'tablets', 'mobile-accessories'];
 
-        // 2. Ask the API for all these categories at the exact same time
         const fetchPromises = techCategories.map(category =>
             fetch(`https://dummyjson.com/products/category/${category}`).then(res => res.json())
         );
 
-        // 3. Wait for all the data to arrive
         const results = await Promise.all(fetchPromises);
-
-        // 4. Combine all the separate category arrays into one massive store inventory
         const allTechProducts = results.flatMap(data => data.products);
 
-        // 5. Shuffle the array slightly so laptops and phones are mixed together
         products.value = allTechProducts.sort(() => Math.random() - 0.5);
-
     } catch (error) {
-        console.error("Error fetching data:", error);
+        console.error('Error fetching data:', error);
     } finally {
         isLoading.value = false;
     }
 });
 
-const filteredProducts = computed(() => {
-    return products.value.filter(product =>
-        product.title.toLowerCase().includes(searchQuery.value.toLowerCase())
-    );
+const suggestions = computed(() => {
+    const value = searchQuery.value.trim().toLowerCase();
+
+    if (!value) return [];
+
+    return products.value
+        .filter(product => {
+            const title = product.title.toLowerCase();
+            const category = product.category.toLowerCase();
+            return title.includes(value) || category.includes(value);
+        })
+        .slice(0, 6);
 });
+
+const displayedProducts = computed(() => {
+    const value = submittedQuery.value.trim().toLowerCase();
+
+    if (!value) return products.value;
+
+    return products.value.filter(product => {
+        const title = product.title.toLowerCase();
+        const category = product.category.toLowerCase();
+        return title.includes(value) || category.includes(value);
+    });
+});
+
+const handleSearch = () => {
+    submittedQuery.value = searchQuery.value.trim();
+    isSuggestionOpen.value = false;
+};
+
+const selectSuggestion = (product: Product) => {
+    searchQuery.value = product.title;
+    submittedQuery.value = product.title;
+    isSuggestionOpen.value = false;
+};
+
+const formatCategory = (category: string) => category.replace(/-/g, ' ');
 </script>
 
 <template>
@@ -57,21 +85,48 @@ const filteredProducts = computed(() => {
                     <path stroke-linecap="round" stroke-linejoin="round"
                         d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z" />
                 </svg>
-                <input v-model="searchQuery" type="text"
-                    placeholder="Search Laptops, iPhones, iPads, and Accessories..."
-                    class="w-full pl-16 pr-6 py-5 bg-white/80 backdrop-blur-md border border-gray-200 rounded-full shadow-sm hover:shadow-md text-lg focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all placeholder-gray-400">
+
+                <input v-model="searchQuery" @input="isSuggestionOpen = searchQuery.trim().length > 0"
+                    @focus="isSuggestionOpen = searchQuery.trim().length > 0" @keydown.enter.prevent="handleSearch"
+                    type="text" placeholder="Search Laptops, iPhones, iPads, and Accessories..."
+                    class="w-full pl-16 pr-28 py-5 bg-white/80 backdrop-blur-md border border-gray-200 rounded-full shadow-sm hover:shadow-md text-lg focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all placeholder-gray-400">
+
+                <button type="button" @click="handleSearch"
+                    class="absolute right-2 top-2 px-5 py-3 rounded-full bg-blue-600 hover:bg-blue-700 text-white text-sm font-semibold shadow-md transition-colors">
+                    Search
+                </button>
+
+                <div v-if="isSuggestionOpen && suggestions.length"
+                    class="absolute left-0 right-0 top-full mt-3 z-20 bg-white border border-gray-200 rounded-2xl shadow-xl overflow-hidden">
+                    <button v-for="product in suggestions" :key="product.id" type="button"
+                        @click="selectSuggestion(product)"
+                        class="w-full flex items-center justify-between gap-4 px-5 py-3 text-left hover:bg-gray-50 transition-colors border-b border-gray-100 last:border-b-0">
+                        <span class="font-medium text-gray-800">{{ product.title }}</span>
+                        <span class="text-xs uppercase tracking-wide text-gray-400">{{ formatCategory(product.category)
+                            }}</span>
+                    </button>
+                </div>
             </div>
+        </div>
+
+        <div v-if="submittedQuery" class="max-w-4xl mx-auto mb-6 px-4 text-left text-sm text-gray-600">
+            Showing results for <span class="font-semibold text-gray-900">"{{ submittedQuery }}"</span>
         </div>
 
         <div v-if="isLoading" class="text-center py-20 text-gray-400 text-xl font-light">
             Loading the ecosystem...
         </div>
 
+        <div v-else-if="displayedProducts.length === 0" class="text-center py-20 text-gray-500">
+            <p class="text-2xl font-light mb-2">No products match your search.</p>
+            <p class="text-sm">Try another product name or category.</p>
+        </div>
+
         <div v-else class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            <router-link v-for="product in filteredProducts" :key="product.id" :to="`/product/${product.id}`"
+            <router-link v-for="product in displayedProducts" :key="product.id" :to="`/product/${product.id}`"
                 class="bg-white/60 backdrop-blur-sm border border-gray-100 rounded-3xl p-8 shadow-sm hover:shadow-2xl transition-all duration-500 cursor-pointer flex flex-col items-center text-center group">
                 <h3 class="text-xs font-bold text-gray-400 mb-2 uppercase tracking-widest">{{
-                    product.category.replace('-', ' ') }}</h3>
+                    formatCategory(product.category) }}</h3>
                 <h2 class="text-2xl font-semibold text-gray-900 mb-2 line-clamp-1">{{ product.title }}</h2>
                 <p class="text-lg font-light text-gray-500 mb-8">${{ product.price }}</p>
 

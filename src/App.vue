@@ -12,13 +12,16 @@ import { cartCount } from './store/cart';
         </router-link>
 
         <nav class="hidden md:flex items-center gap-8 text-sm font-medium text-gray-500">
-          <router-link to="/" class="hover:text-black transition-colors">Laptops</router-link>
-          <router-link to="/" class="hover:text-black transition-colors">Mobiles</router-link>
-          <router-link to="/" class="hover:text-black transition-colors">Tablets</router-link>
-          <router-link to="/" class="hover:text-black transition-colors">Accessories</router-link>
+          <router-link to="/laptops" class="hover:text-black transition-colors">Laptops</router-link>
+          <router-link to="/mobiles" class="hover:text-black transition-colors">Mobiles</router-link>
+          <router-link to="/tablets" class="hover:text-black transition-colors">Tablets</router-link>
+          <router-link to="/accessories" class="hover:text-black transition-colors">Accessories</router-link>
 
           <div class="h-4 w-px bg-gray-300"></div>
-          <router-link to="/login" class="text-blue-600 hover:text-blue-800 transition-colors">Sign In</router-link>
+          <router-link to="/login"
+            class="border border-blue-500 text-blue-600 hover:text-blue-800 transition-colors font-semibold px-3 py-1.5 rounded-full">
+            Sign In
+          </router-link>
 
           <router-link to="/cart"
             class="flex items-center gap-2 bg-gray-100 hover:bg-gray-200 text-gray-900 px-4 py-2 rounded-full font-semibold transition-colors cursor-pointer">
